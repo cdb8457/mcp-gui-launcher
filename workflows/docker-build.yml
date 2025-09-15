@@ -22,6 +22,6 @@ jobs:
     - name: Build and push Docker image
       uses: docker/build-push-action@v5
       with:
-        context: .
+        context: ./gui
         push: true
         tags: ghcr.io/${{ github.repository_owner }}/mcp-gui-launcher:latest
