@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  gui:
+    build: ./gui
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./config:/app/config
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    privileged: true
+    networks:
+      - mcp-network
+
+  # Example MCP server (free)
+  mcp-server-free:
+    image: some-free-mcp-server:latest
+    ports:
+      - "8080:8080"
+    networks:
+      - mcp-network
+    profiles:
+      - mcp-free
+
+  # Example MCP server (paid, with API key)
+  mcp-server-paid:
+    image: some-paid-mcp-server:latest
+    ports:
+      - "8081:8081"
+    environment:
+      - API_KEY=${API_KEY}
+    networks:
+      - mcp-network
+    profiles:
+      - mcp-paid
+
+networks:
+  mcp-network:
+    driver: bridge

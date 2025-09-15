@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCP GUI Launcher</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>MCP GUI Launcher</h1>
+        <div class="api-key-section">
+            <h2>API Key for Paid Servers</h2>
+            <input type="text" id="api-key" placeholder="Enter API Key">
+            <button onclick="setApiKey()">Set API Key</button>
+        </div>
+        <div class="services">
+            {% for service in services %}
+            <div class="service-card">
+                <h3>{{ service.name }}</h3>
+                <p>Status: {{ service.status }}</p>
+                <p>Type: {{ service.type }}</p>
+                <button onclick="startService('{{ service.name }}')">Start</button>
+                <button onclick="stopService('{{ service.name }}')">Stop</button>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
