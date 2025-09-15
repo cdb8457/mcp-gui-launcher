@@ -39,4 +39,4 @@ services:
 
 networks:
   mcp-network:
-    driver: bridge
+    driver: bridge 
