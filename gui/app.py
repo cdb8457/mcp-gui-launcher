@@ -1,8 +1,21 @@
 from flask import Flask, render_template, request, jsonify
 import subprocess
 import os
+import json
 
 app = Flask(__name__)
+
+CONFIG_FILE = '/app/config/config.json'
+
+def load_config():
+    if os.path.exists(CONFIG_FILE):
+        with open(CONFIG_FILE, 'r') as f:
+            return json.load(f)
+    return {"api_key": "", "other_settings": {}}
+
+def save_config(config):
+    with open(CONFIG_FILE, 'w') as f:
+        json.dump(config, f, indent=2)
 
 @app.route('/')
 def index():
@@ -39,11 +52,10 @@ def stop_service(service_name):
 
 @app.route('/set_api_key', methods=['POST'])
 def set_api_key():
-    api_key = request.form.get('api_key')
-    # Save to config or env
-    with open('/app/config/api_key.txt', 'w') as f:
-        f.write(api_key)
-    return jsonify({'status': 'success'})
+    config = load_config()
+    config['api_key'] = request.form.get('api_key', '')
+    save_config(config)
+    return jsonify({"status": "success"})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
