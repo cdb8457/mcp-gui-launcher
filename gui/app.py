@@ -1,11 +1,7 @@
 from flask import Flask, render_template, request, jsonify
-import docker
 import os
 
 app = Flask(__name__)
-
-# Docker client
-client = docker.DockerClient(base_url='unix://var/run/docker.sock')
 
 @app.route('/')
 def index():
