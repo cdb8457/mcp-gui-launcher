@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, jsonify
+import subprocess
 import os
 
 app = Flask(__name__)
@@ -17,16 +18,22 @@ def index():
 def start_service(service_name):
     try:
         profile = 'mcp-free' if 'free' in service_name else 'mcp-paid'
-        os.system(f'docker-compose --profile {profile} up -d {service_name}')
-        return jsonify({'status': 'success', 'message': f'{service_name} started'})
+        result = subprocess.run(f'docker-compose --profile {profile} up -d {service_name}', shell=True, capture_output=True, text=True)
+        if result.returncode == 0:
+            return jsonify({'status': 'success', 'message': f'{service_name} started'})
+        else:
+            return jsonify({'status': 'error', 'message': result.stderr})
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)})
 
 @app.route('/stop/<service_name>', methods=['POST'])
 def stop_service(service_name):
     try:
-        os.system(f'docker-compose stop {service_name}')
-        return jsonify({'status': 'success', 'message': f'{service_name} stopped'})
+        result = subprocess.run(f'docker-compose stop {service_name}', shell=True, capture_output=True, text=True)
+        if result.returncode == 0:
+            return jsonify({'status': 'success', 'message': f'{service_name} stopped'})
+        else:
+            return jsonify({'status': 'error', 'message': result.stderr})
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)})
 

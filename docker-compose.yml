@@ -15,11 +15,13 @@ services:
     networks:
       - mcp-network
 
-  # Example MCP server (free)
+  # Playwright MCP server (free)
   mcp-server-free:
-    image: some-free-mcp-server:latest
+    image: mcr.microsoft.com/playwright:v1.47.0-noble
+    container_name: playwright-mcp
+    restart: unless-stopped
     ports:
-      - "8080:8080"
+      - "8931:8931"
     networks:
       - mcp-network
     profiles:
